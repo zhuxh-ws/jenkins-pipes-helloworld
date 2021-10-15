@@ -1,8 +1,13 @@
 node {
   try {
     stage('checkout') {
-      checkout scm
+      checkout([
+        $class: 'GitSCM', branches: [[name: "${branch}"]],
+        doGenerateSubmoduleConfigurations: false,extensions: [[$class:'CheckoutOption',timeout:30],[$class:'CloneOption',depth:0,noTags:false,reference:'',shallow:false,timeout:30]], submoduleCfg: [],
+        //userRemoteConfigs: [[credentialsId: 'github', url: "${project_url}"]]
+      ])
     }
+    
     stage('prepare') {
       sh "git clean -fdx"
     }
